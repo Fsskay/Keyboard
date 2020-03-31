@@ -15,29 +15,65 @@
         a {
             text-decoration: none;
         }
-
-        kbd {
-            border: solid 1px black;
-            width: 4em;
-            height: 4em;
+        body {
+            background-image: url("mountain.jpg");
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        kbd.SingleKey {
+            margin: 10px;
             display: inline-block;
             text-transform: uppercase;
             position: relative;
+            width: 60px;
+            height: 55px;
+            background-color: #292929;
+            background-image: linear-gradient(180deg, #292929 0%, #111111 100%);
+            background-image: -webkit-linear-gradient(180deg, #292929 0%, #111111 100%);
+            background-image: -moz-linear-gradient(180deg, #292929 0%, #111111 100%);
+            background-image: -o-linear-gradient(180deg, #292929 0%, #111111 100%);
+            border: 1px solid #373737;
+            color: white;
+            border-radius: 6px;
+            box-shadow: 0 0 0 1px #1A1B1C, 0 0 0 2px #1F2020, 0 3px 0 2px #080808;
+            font-size: 16px;
+            font-family: Helvetica;
+        }
+
+        span.word {
+            position: absolute;
+            left: 4px;
+            top: 4px;
+            font-weight: bolder;
         }
 
         main {
             text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 800px;
         }
 
-        .wrapper {
+        .keyboard-wrapper {
             display: inline-block;
+            background-color: rgba(215, 215, 215, 0.1);
+            border-radius: 16px;
+            padding: 25px;
         }
 
         kbd > button {
             position: absolute;
-            right: 0;
-            bottom: 0;
+            right: 1px;
+            bottom: 1px;
             display: none;
+            background-color: #D7D7D7;
+            font-family: "微软雅黑 Light";
+            font-weight: bold;
+            font-size: 14px;
+            color: black;
+            border-radius: 3px;
+            padding: 1px;
         }
 
         kbd:hover > button {
@@ -49,7 +85,6 @@
 <body>
 <main>
     <div class='keyboard-wrapper' id='wrapper'>
-
     </div>
 </main>
 <footer></footer>
@@ -87,8 +122,11 @@
         while (index2 < row['length']) {    // 0~9 0~8 0~6
             kbd = document.createElement('kbd'); //js在div中创建kbd
             button1 = document.createElement('button');  // js在kbd中创建button
-            kbd.textContent = row[index2];  //为kbd添加文本,文本为row[index2],即 第x行的第x个的值 如keys中的0-0('q')
-            button1.textContent = '自定义';  //为按钮添加文本'自定义'
+            spn = document.createElement('span'); //
+            spn.textContent = row[index2];  //为span添加文本,文本为row[index2],即 第x行的第x个的值 如keys中的0-0('q')
+            spn.className = 'word';
+            kbd.className = 'SingleKey';     //为kbd元素添加classname,
+            button1.textContent = '编辑';  //为按钮添加文本'编辑'
             button1.id = row[index2];   //为按钮设置id,如<button id='q'><button>
             button1.onclick = function (keywatcher) {
                 key = (keywatcher['target']['id']);
@@ -96,6 +134,7 @@
                 hash[key] = x;      //hash变更
                 localStorage.setItem('zzz', JSON.stringify(hash));
             };
+            kbd.appendChild(spn);  //kbd>span
             divcreater.appendChild(kbd);  // div>kbd
             kbd.appendChild(button1);  //  kbd>button
             index2 = index2 + 1    //第一行创建10个,第二行创建9个,第三行创建7个
