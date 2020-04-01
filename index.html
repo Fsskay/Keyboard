@@ -15,11 +15,13 @@
         a {
             text-decoration: none;
         }
+
         body {
             background-image: url("mountain.jpg");
             background-repeat: no-repeat;
             background-size: cover;
         }
+
         kbd.SingleKey {
             margin: 10px;
             display: inline-block;
@@ -40,6 +42,14 @@
             font-family: Helvetica;
         }
 
+        .SingleKey img {
+            width: 16px;
+            height: 16px;
+            position: relative;
+            left: 10px;
+            top: 5px;
+        }
+
         span.word {
             position: absolute;
             left: 4px;
@@ -52,7 +62,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 800px;
+            height: 100vh;
         }
 
         .keyboard-wrapper {
@@ -102,7 +112,7 @@
         'e': 'ele.me',
         'r': 'renren.com',
         't': 'tianya.com',
-        'y': 'youtube.com',
+        'y': 'youku.com',
         'z': 'zhihu.com',
     };     // 哈希数组,映射的作用
 
@@ -122,26 +132,43 @@
         while (index2 < row['length']) {    // 0~9 0~8 0~6
             kbd = document.createElement('kbd'); //js在div中创建kbd
             button1 = document.createElement('button');  // js在kbd中创建button
-            spn = document.createElement('span'); //
+            spn = document.createElement('span'); // js在kbd中创建spa
             spn.textContent = row[index2];  //为span添加文本,文本为row[index2],即 第x行的第x个的值 如keys中的0-0('q')
             spn.className = 'word';
             kbd.className = 'SingleKey';     //为kbd元素添加classname,
             button1.textContent = '编辑';  //为按钮添加文本'编辑'
             button1.id = row[index2];   //为按钮设置id,如<button id='q'><button>
+            ico = document.createElement(('img'));
+            if (hash[row[index2]]) {
+                ico.src = 'http://' + hash[row[index2]] + '/favicon.ico';
+            } else {
+                ico.src = '//i.loli.net/2017/11/10/5a05afbc5e183.png'
+            }
+            ico.onerror = function(icoDownloadFailed){
+                icoDownloadFailed.target.src = '//i.loli.net/2017/11/10/5a05afbc5e183.png'
+            };
             button1.onclick = function (keywatcher) {
-                key = (keywatcher['target']['id']);
+                button2 = keywatcher['target'];
+                ico2 = button2.previousSibling;
+                key = button2['id'];
                 x = prompt('给我一个网址');
                 hash[key] = x;      //hash变更
+                ico2.src = 'http://' + x + '/favicon.ico';
+                ico2.onerror = function(icoDownloadFailed){
+                    icoDownloadFailed.target.src = '//i.loli.net/2017/11/10/5a05afbc5e183.png'
+                };
                 localStorage.setItem('zzz', JSON.stringify(hash));
             };
-            kbd.appendChild(spn);  //kbd>span
             divcreater.appendChild(kbd);  // div>kbd
+            kbd.appendChild(spn);  //kbd>span
+            kbd.appendChild(ico);  //kbd>span
             kbd.appendChild(button1);  //  kbd>button
             index2 = index2 + 1    //第一行创建10个,第二行创建9个,第三行创建7个
 
         }
         index = index + 1   //一共创建三行 0 1 2
     }
+
 
     document.onkeypress = function (keywatcher) {        //设置按下一个按钮,在新页面中打开对应的网页
         key = keywatcher['key']; // qwer
