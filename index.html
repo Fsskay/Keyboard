@@ -136,7 +136,7 @@
             var key = button2['id'];
             var x = prompt('给我一个网址');
             hash[key] = x;      //hash变更
-            img2.src = 'http://' + x + '/favimgn.img';
+            img2.src = 'http://' + x + '/favicon.ico';
             img2.onerror = function (imgDownloadFailed) {
                 imgDownloadFailed.target.src = '//i.loli.net/2017/11/10/5a05afbc5e183.png'
             };
