@@ -111,20 +111,20 @@
     listenToUser(hash);
 
     // 下面是工具函数
-    function getFromLocalStorage(name) {                                    //本地储存库
+    function getFromLocalStorage(name) {
         return JSON.parse(localStorage.getItem(name) || 'null')
-    }
+    }       //本地储存库
 
-    function tag(tagName) {                                                 //HTML标签创建
+    function tag(tagName) {
         return document.createElement(tagName)
-    }
+    }       //用于创建HTML标签  如div,kbd
 
     function createSpan(textContent) {
         var span = tag('span');
         span.textContent = textContent;
         span.className = 'word';
         return span
-    }
+    }       //用于创建span,span的内容,span的classname
 
     function createButton(id) {
         var button = tag('button');  // js在kbd中创建button
@@ -143,7 +143,7 @@
             localStorage.setItem('zzz', JSON.stringify(hash));
         };
         return button
-    }
+    }       //用于创建button,button的textContent,设置button的功能
 
     function createImage(domain) {
         var img = tag(('img'));
@@ -156,7 +156,7 @@
             imgDownloadFailed.target.src = '//i.loli.net/2017/11/10/5a05afbc5e183.png'
         };
         return img
-    }
+    }       //设置图标图片的状态.   1,有引用:显示该网站的ico   2,无引用:显示白点图片    3.引用失败:显示白点图片
 
     function init() {
         var keys = {
@@ -174,8 +174,8 @@
             't': 'tianya.com',
             'y': 'youku.com',
             'z': 'zhihu.com',
-        };     // 哈希数组,映射的作用
-        var hashInlocalStorage = getFromLocalStorage('zzz');
+        };     // 哈希
+        var hashInlocalStorage = getFromLocalStorage('zzz');   //设置本地仓库
         if (hashInlocalStorage) {
             hash = hashInlocalStorage
         } //localStorage,可储存一个备份于浏览器中,方便用户自定义某个按键所对应的网页
@@ -183,45 +183,39 @@
             'keys': keys,
             'hash': hash
         }
-    }
+    }       //初始化keys数组,哈希
 
     function generateKeyboard() {
-        for (var index = 0; index < keys['length']; index = index + 1) {
-            var div = tag('div');
-            div.className = 'divcreater';             //js创建元素div
-
+        for (var index = 0; index < keys['length']; index = index + 1) {         //用于创建 第一行,第二行,第三行
+            var div = tag('div');                       //对应118行,function tag(tagName)   自动创建div标签
+            div.className = 'divcreater';             //设置div的classname为'divcreater'
             wrapper.appendChild(div);               //为wrapper 设置子 div
-            var row = keys[index];                    // row赋值为 keys数组的 index
+            var row = keys[index];                  // row(行)赋值为 keys数组的 index, 即为第n行   0  1  2
             for (var index2 = 0; index2 < row['length']; index2 = index2 + 1) {
-                var span = createSpan(row[index2]);
+                var span = createSpan(row[index2]);         //#122    row[index2]= n行的 0: 'q', 1: 'w', 2: 'e', 3: 'r' ...
 
-                var button = createButton(row[index2]);
+                var button = createButton(row[index2]);         //#129
 
-                var img = createImage(hash[row[index2]]);
+                var img = createImage(hash[row[index2]]);       //#148   hash[row[index2]] = 每个键所对应的哈希值
 
-                var kbd =tag('kbd');
+                var kbd = tag('kbd');        //#118     自动创建kbd标签
+                kbd.className = 'SingleKey';        //为kbd标签添加classname
 
-                kbd.className = 'SingleKey';
-
-                kbd.appendChild(span);
-                kbd.appendChild(img);
-                kbd.appendChild(button);
-
-                div.appendChild(kbd);
+                kbd.appendChild(span);      //kbd>span
+                kbd.appendChild(img);       //kbd>img
+                kbd.appendChild(button);        //kbd>button
+                div.appendChild(kbd);       //div>kbd
             }
         }
-    }
+    }       //遍历键盘. 设置HTML标签
 
     function listenToUser(hash) {
         onkeypress = function (keywatcher) {        //设置按下一个按钮,在新页面中打开对应的网页
             var key = keywatcher['key']; // qwer
             var website = hash[key];
-            window.open('http://' + website, '_blank')
+            window.open('http://' + website, '_blank')      //新窗口中打开网页
         }
-    }
+    }       //监听用户键盘
 </script>
 </body>
 </html>
-
-
-
