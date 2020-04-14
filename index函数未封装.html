@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport'
+          content='width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0'>
+    <meta http-equiv='X-UA-Compatible' content='ie=edge'>
+    <title>AI-keyboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        body {
+            background-image: url("mountain.jpg");
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        kbd.SingleKey {
+            margin: 10px;
+            display: inline-block;
+            text-transform: uppercase;
+            position: relative;
+            width: 60px;
+            height: 55px;
+            background-color: #292929;
+            background-image: linear-gradient(180deg, #292929 0%, #111111 100%);
+            background-image: -webkit-linear-gradient(180deg, #292929 0%, #111111 100%);
+            background-image: -moz-linear-gradient(180deg, #292929 0%, #111111 100%);
+            background-image: -o-linear-gradient(180deg, #292929 0%, #111111 100%);
+            border: 1px solid #373737;
+            color: white;
+            border-radius: 6px;
+            box-shadow: 0 0 0 1px #1A1B1C, 0 0 0 2px #1F2020, 0 3px 0 2px #080808;
+            font-size: 16px;
+            font-family: Helvetica;
+        }
+
+        .SingleKey img {
+            width: 16px;
+            height: 16px;
+            position: relative;
+            left: 10px;
+            top: 5px;
+        }
+
+        span.word {
+            position: absolute;
+            left: 4px;
+            top: 4px;
+            font-weight: bolder;
+        }
+
+        main {
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .keyboard-wrapper {
+            display: inline-block;
+            background-color: rgba(215, 215, 215, 0.1);
+            border-radius: 16px;
+            padding: 25px;
+        }
+
+        kbd > button {
+            position: absolute;
+            right: 1px;
+            bottom: 1px;
+            display: none;
+            background-color: #D7D7D7;
+            font-family: "微软雅黑 Light";
+            font-weight: bold;
+            font-size: 14px;
+            color: black;
+            border-radius: 3px;
+            padding: 1px;
+        }
+
+        kbd:hover > button {
+            display: inline-block;
+        }
+    </style>
+    <!--    css基础样式-->
+</head>
+<body>
+<main>
+    <div class='keyboard-wrapper' id='wrapper'>
+    </div>
+</main>
+<footer></footer>
+<script>
+    var keys = {
+        0: {0: 'q', 1: 'w', 2: 'e', 3: 'r', 4: 't', 5: 'y', 6: 'u', 7: 'i', 8: 'o', 9: 'p', length: 10},
+        1: {0: 'a', 1: 's', 2: 'd', 3: 'f', 4: 'g', 5: 'h', 6: 'j', 7: 'k', 8: 'l', length: 9},
+        2: {0: 'z', 1: 'x', 2: 'c', 3: 'v', 4: 'b', 5: 'n', 6: 'm', length: 7},
+        length: 3
+    };     //keys 数组
+
+    var hash = {
+        'q': 'qq.com',
+        'w': 'weibo.com',
+        'e': 'ele.me',
+        'r': 'renren.com',
+        't': 'tianya.com',
+        'y': 'youku.com',
+        'z': 'zhihu.com',
+    };     // 哈希数组,映射的作用
+
+    var hashInlocalStorage = JSON.parse(localStorage.getItem('zzz') || 'null');   //取出 localStorage中 zzz对应的hash
+    if (hashInlocalStorage) {
+        hash = hashInlocalStorage
+    } //localStorage,可储存一个备份于浏览器中,方便用户自定义某个按键所对应的网页
+
+    var index = 0;
+    while (index < keys['length']) {                              // 0 1 2
+        divcreater = document.createElement('div');              //js创建元素div
+        wrapper.appendChild(divcreater);               //为wrapper 设置子 divcreater
+
+        row = keys[index];                    // row赋值为 keys数组的 index
+
+        var index2 = 0;
+        while (index2 < row['length']) {    // 0~9 0~8 0~6
+            var kbd = document.createElement('kbd'); //js在div中创建kbd
+            var button1 = document.createElement('button');  // js在kbd中创建button
+            var spn = document.createElement('span'); // js在kbd中创建spa
+            spn.textContent = row[index2];  //为span添加文本,文本为row[index2],即 第x行的第x个的值 如keys中的0-0('q')
+            spn.className = 'word';
+            kbd.className = 'SingleKey';     //为kbd元素添加classname,
+            button1.textContent = '编辑';  //为按钮添加文本'编辑'
+            button1.id = row[index2];   //为按钮设置id,如<button id='q'><button>
+            var ico = document.createElement(('img'));
+            if (hash[row[index2]]) {
+                ico.src = 'http://' + hash[row[index2]] + '/favicon.ico';
+            } else {
+                ico.src = '//i.loli.net/2017/11/10/5a05afbc5e183.png'
+            }
+            ico.onerror = function(icoDownloadFailed){
+                icoDownloadFailed.target.src = '//i.loli.net/2017/11/10/5a05afbc5e183.png'
+            };
+            button1.onclick = function (keywatcher) {
+                var button2 = keywatcher['target'];
+                var ico2 = button2.previousSibling;
+                var key = button2['id'];
+                var x = prompt('给我一个网址');
+                hash[key] = x;      //hash变更
+                ico2.src = 'http://' + x + '/favicon.ico';
+                ico2.onerror = function(icoDownloadFailed){
+                    icoDownloadFailed.target.src = '//i.loli.net/2017/11/10/5a05afbc5e183.png'
+                };
+                localStorage.setItem('zzz', JSON.stringify(hash));
+            };
+            divcreater.appendChild(kbd);  // div>kbd
+            kbd.appendChild(spn);  //kbd>span
+            kbd.appendChild(ico);  //kbd>span
+            kbd.appendChild(button1);  //  kbd>button
+            index2 = index2 + 1    //第一行创建10个,第二行创建9个,第三行创建7个
+
+        }
+        index = index + 1   //一共创建三行 0 1 2
+    }
+
+
+    document.onkeypress = function (keywatcher) {        //设置按下一个按钮,在新页面中打开对应的网页
+        var key = keywatcher['key']; // qwer
+        var website = hash[key];
+        window.open('http://' + website, '_blank')
+    }
+</script>
+
+</body>
+</html>
